@@ -114,8 +114,7 @@ def ok(data):
     return 0
 def check(N,hh,driver):
     if N == None:
-        main.do(1)
-        return 1,hh,driver,0
+        N = main.do2()
     if '아니' in N or '다시' in N or '아 맞다' in N or '됐어' in N:
         playsound.playsound('music/cancel.mp3')
         speak('나중에 다시 불러주세요',0)

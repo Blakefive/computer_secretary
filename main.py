@@ -40,13 +40,32 @@ def do1(hh,driver):
         playsound.playsound('music/error2.mp3')
     except:
         playsound.playsound('music/error1.mp3')
+
+def do2():
+    while True:
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            tts = gTTS(text='다시 한 번 말씀해주세요.', lang='ko')
+            filename = 'data1.mp3'
+            tts.save(filename)
+            playsound.playsound(filename)
+            os.remove('data1.mp3')
+            print("Please say what you have me do")
+            audio = r.listen(source)
+        try:
+            data = r.recognize_google(audio, language='ko')
+            if data != "" and data != None:
+                return data
+        except sr.UnknownValueError:
+            playsound.playsound('music/error1.mp3')
+        except sr.RequestError as e:
+            playsound.playsound('music/error2.mp3')
+        
 def do(ok):
     r = sr.Recognizer()
     with sr.Microphone() as source:
         if ok == 0:
             tts = gTTS(text='시킬 것을 말씀해주세요.', lang='ko')
-        if ok == 1:
-            tts = gTTS(text='다시 한 번 말씀해주세요.', lang='ko')
         filename = 'data1.mp3'
         tts.save(filename)
         playsound.playsound(filename)
@@ -56,9 +75,8 @@ def do(ok):
     try:
         data = r.recognize_google(audio, language='ko')
         if data == "" or data == None:
-            data = do(1)
-        else:
-            return data
+            data = do2()
+        return data
     except sr.UnknownValueError:
         playsound.playsound('music/error1.mp3')
     except sr.RequestError as e:
@@ -79,7 +97,7 @@ if __name__ == "__main__":
             if '자비스' in data and name2(data) != '':
                 print(name2(data))
                 playsound.playsound('music/startmusic.wav')
-                gg,hh,driver= check.check(name2(data),hh,driver)
+                gg,hh,driver,kk= check.check(name2(data),hh,driver)
                 playsound.playsound('music/endmusic.wav')
             elif data == '자비스':
                 playsound.playsound('music/startmusic.wav')
