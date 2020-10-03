@@ -22,4 +22,4 @@
 8. Enjoy this programming
 
 >Version when creating
-1. Pthon 3.7.8
+Pthon 3.7.8
