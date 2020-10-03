@@ -109,136 +109,137 @@ def speak(text,check):
         os.remove('music/data.mp3')
     print(text)
 def ok(data):
-    if '예' in data:
-        main.do(0)
+    if '예' in data or '네' in data:
+        return 1
+    return 0
 def check(N,hh,driver):
     if N == None:
         main.do(1)
-        return 1,hh,driver
+        return 1,hh,driver,0
     if '아니' in N or '다시' in N or '아 맞다' in N or '됐어' in N:
         playsound.playsound('music/cancel.mp3')
         speak('나중에 다시 불러주세요',0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '붙여' in N and ('놓기' in N or '넣기' in N):
         speak(str(clipboard.paste()) + ' 을 붙여놓겠습니다',0)
         pyautogui.write(clipboard.paste())
         print(clipboard.paste())
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '계산기' in N and ('실행' in N or '켜' in N or '틀어' in N or '열어' in N):
         playsound.playsound('music/open program.wav')
         speak('계산기를 실행시킵니다',0)
         t2 = threading.Thread(target=run, args=(2, ))
         t2.start()
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '계산기' in N and ('꺼' in N or '종료' in N or '멈춰' in N):
         speak('계산기를 끕니다.',0)
         playsound.playsound('music/click.mp3')
         os.system('taskkill.exe /f /im calculator.exe')
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '메모장' in N and('실핼' in N or '켜' in N or '틀어' in N or '열어' in N):
         playsound.playsound('music/open program.wav')
         speak('메모장을 실행시킵니다',0)
         t1 = threading.Thread(target=run, args=(1, ))
         t1.start()
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '메모장' in N and('꺼' in N or '종료' in N or '멈춰' in N):
         speak('메모장을 끕니다.',0)
         playsound.playsound('music/click.mp3')
         os.system('taskkill.exe /f /im notepad.exe')
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '날짜' in N:
         tm = time.localtime() 
         speak(str(tm.tm_year)+"년 "+str(tm.tm_mon)+"월 "+str(tm.tm_mday)+"입 입니다",0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '시간' in N:
         tm = time.localtime() 
         speak(str(tm.tm_hour)+"시 "+str(tm.tm_min)+"분 "+str(tm.tm_sec)+"초 입니다",0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('스크린샷' in N or '캡처' in N or '스샷' in N) and ('보여' in N or '확인' in N or '체크' in N):
         speak('스크린샷한 것을 보여드립니다.',0)
         im = Image.open('image/imagedata.png')
         im.show()
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('스크린샷' in N and '찍어' in N) or '스샷' in N or '캡처' in N:
         speak('스크린샷을 찍습니다,',0)
         playsound.playsound('music/camera.mp3')
         pyautogui.screenshot('image/imagedata.png')
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '컴퓨터' in N  and ('확인' in N or  '체크' in Ns) :
         speak('cpu을 '+str(psutil.cpu_percent())+'퍼센트 사용 중입니다'+' 그리고 메모리는 '+str(psutil.virtual_memory().percent)+ '퍼센트 사용 중입니다',0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('다음' in N or '앞' in N or '다시' in N) and ('영상' in N) and ('찾아' in N or '틀어' in N or '켜' in N):
         speak('다음 영상을 재생합니다',0)
         element = driver.find_element_by_id('movie_player')
         element.send_keys(Keys.SHIFT,"n")
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('다음' in N or '앞' in N or '다시' in N):
         speak('앞으로 갑니다',0)
         driver.forward()
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('이전' in N or '그전' in N or '뒤' in N):
         speak('이전 영상을 재생합니다',0)
         driver.back()
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('찾아' in N or '검색' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,1)
-        return 1,1,driver
+        return 1,1,driver,0
     elif '제목' in N and ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,0)
-        return 1,1,driver
+        return 1,1,driver,0
     elif ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,2)
-        return 1,1,driver
+        return 1,1,driver,0
     elif ('찾아' in N or '틀어' in N or '켜' in N or '검색' in N) and ('새창' in N or '새 창' in N or '세 창' in N or '세창' in N):
         playsound.playsound('music/insert.wav')
         speak(name(N),2)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '찾아' in N or '틀어' in N or '켜' in N or '검색' in N:
         playsound.playsound('music/insert.wav')
         speak(name(N),1)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('음악' in N or '노래' in N or '소리' in N) and  ('줄여' in N  or '내려' in N):
         speak('소리를 줄입니다',5)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('음악' in N or '노래' in N or '소리' in N) and  ('올려' in N or '키워' in N) :
         speak('소리를 올립니다',6)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('화면' in N or '모니터' in N )and '밝기' in N and ('올려' in N or '키워' in N) :
         speak('화면 밝기를 올립니다',7)
         pyautogui.hotkey('ctrl','shift','fn','alt','o')
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif ('화면' in N or '모니터' in N) and '밝기' in N and ('줄여' in N or '내려' in N) :
         speak('화면 밝기를 줄입니다',7)
         pyautogui.hotkey('ctrl','shift','fn','alt','p')
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '컴퓨터' in N and ('bit' in N or '비트' in N) and ('알려' in N or '뭐' in N or '확인' in N or '체크' in N):
         speak(str(platform.machine())[3:] + '.비트 입니다',0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '컴퓨터' in N and ('os' in N or '운영체제' in N or 'operating system' in N) and ('확인' in N or '알려' in N or '뭐' in N or '확인' in N):
         speak(str(platform.system()),0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '컴퓨터' in N and ('cpu' in N or '중앙처리장치' in N) and '코어' in N and '수' in N and ('확인' in N or '알려' in N or '뭐' in N or '확인' in N):
         speak(str(psutil.cpu_count(logical=False)),0)
-        return 1,hh,driver
+        return 1,hh,driver,0
     elif '노래' in N and ('멈춰' in N or '꺼' in N):
         speak('넵 노래를 멈추겠습니다.',0)
         playsound.playsound('music/remove.wav')
         driver.quit()
-        return 1,0,driver
+        return 1,0,driver,0
     elif '멈춰' in N:
         speak('네 알겠습니다',0)
         playsound.playsound('music/remove.wav')
-        return 0,hh,driver
+        return 0,hh,driver,0
     else:
         speak("명령 리스트에 없습니다",0)
-        main.do(2)
-        return 1,hh,driver
+        main.do1(hh,driver)
+        return 1,hh,driver,1
