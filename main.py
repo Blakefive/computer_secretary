@@ -26,7 +26,7 @@ def do1(hh,driver):
         tts.save(filename)
         playsound.playsound(filename)
         os.remove('data1.mp3')
-        print("Please say what you have me do")
+        print("If you want to say again, you say '예'")
         audio = r.listen(source)
     try:
         data = r.recognize_google(audio, language='ko')
@@ -46,11 +46,12 @@ def do2():
         r = sr.Recognizer()
         with sr.Microphone() as source:
             tts = gTTS(text='다시 한 번 말씀해주세요.', lang='ko')
+            write.make('r' + '다시 한 번 말씀해주세요.')
             filename = 'data1.mp3'
             tts.save(filename)
             playsound.playsound(filename)
             os.remove('data1.mp3')
-            print("Please say what you have me do")
+            print("Please say what you have me do again")
             audio = r.listen(source)
         try:
             data = r.recognize_google(audio, language='ko')
@@ -66,6 +67,7 @@ def do(ok):
     with sr.Microphone() as source:
         if ok == 0:
             tts = gTTS(text='시킬 것을 말씀해주세요.', lang='ko')
+            write.make('r' + '시킬 것을 말씀해주세요.')
         filename = 'data1.mp3'
         tts.save(filename)
         playsound.playsound(filename)
@@ -78,7 +80,33 @@ def do(ok):
             data = do2()
         return data
     except sr.UnknownValueError:
-        playsound.playsound('music/error1.mp3')
+        data = do2()
+        return data
+    except sr.RequestError as e:
+        playsound.playsound('music/error2.mp3')
+
+def cpu_name(ok):
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        if ok == 0:
+            tts = gTTS(text='cpu 이름만 말해주세요.', lang='ko')
+            write.make('r' + 'cpu 이름만 말해주세요.')
+        filename = 'data1.mp3'
+        tts.save(filename)
+        playsound.playsound(filename)
+        os.remove('data1.mp3')
+        print("Please say the cpu which you want to know")
+        audio = r.listen(source)
+    try:
+        data = r.recognize_google(audio, language='ko')
+        if data == "" or data == None:
+            data = do2()
+        write.make('m' + data)
+        return data
+    except sr.UnknownValueError:
+        data = do2()
+        write.make('m' + data)
+        return data
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
 
@@ -104,10 +132,11 @@ if __name__ == "__main__":
                 data1 = do(0)
                 gg,hh,driver,kk = check.check(data1,hh,driver)
                 playsound.playsound('music/endmusic.wav')
-            write.make(data)
+                write.make('m' + data1)
+            write.make('m' + data)
             if gg == 0:
                 break
         except sr.UnknownValueError:
-            playsound.playsound('music/error1.mp3')
+            pass
         except sr.RequestError as e:
             playsound.playsound('music/error2.mp3')
