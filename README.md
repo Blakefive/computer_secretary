@@ -10,6 +10,8 @@
 7. pip install googletrans
 8. pip install pillow
 9. pip install clipboard
+10. pip install beautifulsoup4
+11. pip install requests
 
 >How to use
 1. Run .\computer_secretary\relationship_program\DimScreen.exe
