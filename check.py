@@ -15,7 +15,32 @@ import subprocess
 import clipboard
 import threading
 import main
+import cpu_check
+import write
+import weather
+from bs4 import BeautifulSoup
+import requests
 from selenium.webdriver.common.keys import Keys
+
+video_check = 1
+subtitle_check = 0
+subtitle_talk_check = 0
+
+
+def stoporstart(driver):
+    global video_check
+    while True:
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+        try:
+            test = soup.find('button',{'class' , 'ytp-play-button'})
+            testlist = str(str(test).split('=')[1]).split('"')[1]
+            if testlist == '재생(k)':
+                video_check =  0
+            elif testlist == '일시중지(k)':
+                video_check =  1
+        except:
+            pass
 
 def name(text):
     hh = 0
@@ -61,6 +86,7 @@ def run(N):
     if N == 2:
         os.system('calc')
 def speak(text,check):
+    write.make('r' + text)
     if check == 7:
         tts = gTTS(text=text, lang='ko')
         filename = 'music/data.mp3'
@@ -113,8 +139,12 @@ def ok(data):
         return 1
     return 0
 def check(N,hh,driver):
+    global subtitle_check
+    global video_check
     if N == None:
         N = main.do2()
+    else:
+        write.make('m' + N)
     if '아니' in N or '다시' in N or '아 맞다' in N or '됐어' in N:
         playsound.playsound('music/cancel.mp3')
         speak('나중에 다시 불러주세요',0)
@@ -154,6 +184,9 @@ def check(N,hh,driver):
         tm = time.localtime() 
         speak(str(tm.tm_hour)+"시 "+str(tm.tm_min)+"분 "+str(tm.tm_sec)+"초 입니다",0)
         return 1,hh,driver,0
+    elif '날씨' in N:
+        speak(weather.weather(),0)
+        return 1,hh,driver,0
     elif ('스크린샷' in N or '캡처' in N or '스샷' in N) and ('보여' in N or '확인' in N or '체크' in N):
         speak('스크린샷한 것을 보여드립니다.',0)
         im = Image.open('image/imagedata.png')
@@ -167,10 +200,35 @@ def check(N,hh,driver):
     elif '컴퓨터' in N  and ('확인' in N or  '체크' in Ns) :
         speak('cpu을 '+str(psutil.cpu_percent())+'퍼센트 사용 중입니다'+' 그리고 메모리는 '+str(psutil.virtual_memory().percent)+ '퍼센트 사용 중입니다',0)
         return 1,hh,driver,0
+    elif ('cpu' in N or '중앙처리장치' in N or 'CPU' in N) and ('찾아' in N or '알려' in N or '검색' in N) :
+        speak(cpu_check.main(main.cpu_name(0)),0)
+        return 1,hh,driver,0
     elif ('다음' in N or '앞' in N or '다시' in N) and ('영상' in N) and ('찾아' in N or '틀어' in N or '켜' in N):
         speak('다음 영상을 재생합니다',0)
         element = driver.find_element_by_id('movie_player')
         element.send_keys(Keys.SHIFT,"n")
+        return 1,hh,driver,0
+    elif ('자막' in N) and ('켜' in N or '보여' in N or '틀어' in N or '확인' in N):
+        try:
+            data_test = driver.find_element_by_class_name('captions-text')
+            speak('이미 자막이 켜져있습니다',0)
+            subtitle_check = 1
+        except:
+            speak('자막을 킵니다',0)
+            subtitle_check = 1
+            element = driver.find_element_by_id('movie_player')
+            element.send_keys("c")
+        return 1,hh,driver,0
+    elif ('자막' in N) and ('꺼' in N or '없애' in N or '사라' in N):
+        try:
+            data_test = driver.find_element_by_class_name('captions-text')
+            speak('자막을 끕니다',0)
+            element = driver.find_element_by_id('movie_player')
+            element.send_keys("c")
+            subtitle_check = 0
+        except:
+            speak('이미 자막이 꺼져있습니다',0)
+            subtitle_check = 0
         return 1,hh,driver,0
     elif ('다음' in N or '앞' in N or '다시' in N):
         speak('앞으로 갑니다',0)
@@ -180,23 +238,45 @@ def check(N,hh,driver):
         speak('이전 영상을 재생합니다',0)
         driver.back()
         return 1,hh,driver,0
+    elif ('영상' in N or '노래' in N or '음악' in N) and ('켜' in N or '틀어' in N or '재생' in N):
+        if video_check == 0:
+            speak('영상을 재생합니다',0)
+            element = driver.find_element_by_id('movie_player')
+            element.send_keys("k")
+        elif video_check == 1:
+            speak('이미 영상이 재생되고 있습니다',0)
+        return 1,hh,driver,0
+    elif ('영상' in N or '노래' in N or '음악' in N) and ('꺼' in N or '멈춰' in N or '일시정지' in N or '일시 정지' in N or '일시중지' in N or '일시 중지' in N):
+        if video_check == 1:
+            speak('영상을 일시정지합니다',0)
+            element = driver.find_element_by_id('movie_player')
+            element.send_keys("k")
+        elif video_check == 0:
+            speak('이미 영상이 일시정지되어있습니다',0)
+        return 1,hh,driver,0
     elif ('찾아' in N or '검색' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,1)
+        y1 = threading.Thread(target=stoporstart, args=(driver, ))
+        y1.start()
         return 1,1,driver,0
     elif '제목' in N and ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,0)
+        y2 = threading.Thread(target=stoporstart, args=(driver, ))
+        y2.start()
         return 1,1,driver,0
     elif ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,2)
+        y3 = threading.Thread(target=stoporstart, args=(driver, ))
+        y3.start()
         return 1,1,driver,0
     elif ('찾아' in N or '틀어' in N or '켜' in N or '검색' in N) and ('새창' in N or '새 창' in N or '세 창' in N or '세창' in N):
         playsound.playsound('music/insert.wav')
@@ -226,17 +306,26 @@ def check(N,hh,driver):
     elif '컴퓨터' in N and ('os' in N or '운영체제' in N or 'operating system' in N) and ('확인' in N or '알려' in N or '뭐' in N or '확인' in N):
         speak(str(platform.system()),0)
         return 1,hh,driver,0
-    elif '컴퓨터' in N and ('cpu' in N or '중앙처리장치' in N) and '코어' in N and '수' in N and ('확인' in N or '알려' in N or '뭐' in N or '확인' in N):
+    elif '컴퓨터' in N and ('cpu' in N or '중앙처리장치' in N or 'CPU' in N) and '코어' in N and '수' in N and ('확인' in N or '알려' in N or '뭐' in N or '확인' in N):
         speak(str(psutil.cpu_count(logical=False)),0)
         return 1,hh,driver,0
-    elif '노래' in N and ('멈춰' in N or '꺼' in N):
+    elif ('크롬'  in N or 'chrome' in N or '웹사이트' in N or '유튜브' in N) and ('멈춰' in N or '꺼' in N):
+        if subtitle_check == 1:
+            element = driver.find_element_by_id('movie_player')
+            element.send_keys("c")
+            subtitle_check = 0
         speak('넵 노래를 멈추겠습니다.',0)
         playsound.playsound('music/remove.wav')
         driver.quit()
         return 1,0,driver,0
     elif '멈춰' in N:
+        if subtitle_check == 1:
+            element = driver.find_element_by_id('movie_player')
+            element.send_keys("c")
+            subtitle_check = 0
         speak('네 알겠습니다',0)
         playsound.playsound('music/remove.wav')
+        driver.quit()
         return 0,hh,driver,0
     else:
         speak("명령 리스트에 없습니다",0)

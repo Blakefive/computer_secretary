@@ -9,12 +9,21 @@ import time
 from selenium import webdriver
 from googletrans import Translator
 import check
+import threading
 
 title_slst = [] # stringList
 option_wd = webdriver.ChromeOptions() # option in webdriver
 option_wd.add_argument('headless')
 option_wd.add_argument('window-size=1920x1080')
 option_wd.add_argument("disable-gpu")
+
+def loop_skip(driver):
+    while True:
+        try:
+            qwert = driver.find_element_by_xpath('//*[@id="skip-button:6"]/span/button')
+            qwert.click()
+        except:
+            pass
 
 def tellcheck(data):
     if '첫' in data or '일' in data or '1' in data :
@@ -78,5 +87,7 @@ def getTitles(findName,driver,pp):
         driver.implicitly_wait(3)
         check.speak('유튜브에서 ' + findName + ' 의 첫 번째의 영상을 실행시킵니다',3)
         driver.find_elements_by_xpath('//*[@id="video-title"]/yt-formatted-string')[0].click()
+    t = threading.Thread(target=loop_skip, args=(driver, ))
+    t.start()
         
 
