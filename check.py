@@ -24,8 +24,8 @@ from selenium.webdriver.common.keys import Keys
 
 video_check = 1
 subtitle_check = 0
-subtitle_talk_check = 0
-
+subzzzzzzzzzzztitle_talk_check = 0
+check_check = 0
 
 def stoporstart(driver):
     global video_check
@@ -34,13 +34,15 @@ def stoporstart(driver):
         soup = BeautifulSoup(html, 'html.parser')
         try:
             test = soup.find('button',{'class' , 'ytp-play-button'})
-            testlist = str(str(test).split('=')[1]).split('"')[1]
-            if testlist == '재생(k)':
-                video_check =  0
-            elif testlist == '일시중지(k)':
-                video_check =  1
+            if test != check_check:
+                testlist = str(str(test).split('=')[1]).split('"')[1]
+                if testlist == '재생(k)':
+                    video_check =  0
+                elif testlist == '일시중지(k)':
+                    video_check =  1
         except:
             pass
+        check_check = test
 
 def name(text):
     hh = 0
@@ -184,8 +186,14 @@ def check(N,hh,driver):
         tm = time.localtime() 
         speak(str(tm.tm_hour)+"시 "+str(tm.tm_min)+"분 "+str(tm.tm_sec)+"초 입니다",0)
         return 1,hh,driver,0
+    elif '모레' in N and '날씨' in N:
+        speak(weather.weather('모레'),0)
+        return 1,hh,driver,0
+    elif '내일' in N and '날씨' in N:
+        speak(weather.weather('내일'),0)
+        return 1,hh,driver,0
     elif '날씨' in N:
-        speak(weather.weather(),0)
+        speak(weather.weather('오늘'),0)
         return 1,hh,driver,0
     elif ('스크린샷' in N or '캡처' in N or '스샷' in N) and ('보여' in N or '확인' in N or '체크' in N):
         speak('스크린샷한 것을 보여드립니다.',0)
@@ -314,9 +322,12 @@ def check(N,hh,driver):
             element = driver.find_element_by_id('movie_player')
             element.send_keys("c")
             subtitle_check = 0
-        speak('넵 노래를 멈추겠습니다.',0)
-        playsound.playsound('music/remove.wav')
-        driver.quit()
+        if hh == 0:
+            speak('넵 노래를 멈추겠습니다.',0)
+            playsound.playsound('music/remove.wav')
+            driver.quit()
+        else:
+            speak('노래가 재생되고 있지 않습니다.',0)
         return 1,0,driver,0
     elif '멈춰' in N:
         if subtitle_check == 1:
@@ -325,7 +336,8 @@ def check(N,hh,driver):
             subtitle_check = 0
         speak('네 알겠습니다',0)
         playsound.playsound('music/remove.wav')
-        driver.quit()
+        if hh == 1:
+            driver.quit()
         return 0,hh,driver,0
     else:
         speak("명령 리스트에 없습니다",0)

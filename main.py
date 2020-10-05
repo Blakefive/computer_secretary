@@ -39,7 +39,7 @@ def do1(hh,driver):
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
     except:
-        playsound.playsound('music/error1.mp3')
+        playsound.playsound('music/error.mp3')
 
 def do2():
     while True:
@@ -61,6 +61,8 @@ def do2():
             playsound.playsound('music/error1.mp3')
         except sr.RequestError as e:
             playsound.playsound('music/error2.mp3')
+        except:
+            playsound.playsound('music/error.mp3')
         
 def do(ok):
     r = sr.Recognizer()
@@ -84,6 +86,8 @@ def do(ok):
         return data
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
+    except:
+        playsound.playsound('music/error.mp3')
 
 def cpu_name(ok):
     r = sr.Recognizer()
@@ -109,12 +113,23 @@ def cpu_name(ok):
         return data
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
+    except:
+        playsound.playsound('music/error.mp3')
 
-if __name__ == "__main__":   
+if __name__ == "__main__":
+    birthday_year = '2020'
+    mbirthday_year = '2005'
+    birthday = '930'
+    mbirthday = input('당신의 생일을 알려주세요(예 525, 105, 91')
     gg = 1
     hh = 0
     driver = -1
     translator = Translator()
+    tm = time.localtime()
+    if birthday == str(tm.tm_mon)+str(tm.tm_mday):
+        check.speak('제가 벌써 ' + str((int(str(tm.tm_year)) - int(birthday_year))+1) +'살 입니다. 만들어 주셔서 감사합니다.',0)
+    if mbirthday == str(tm.tm_mon)+str(tm.tm_mday):
+        check.speak('새일 축하합니다 ' + str((int(str(tm.tm_year)) - int(mbirthday_year))+1) +'살이시네요.',0)
     while True:
         r = sr.Recognizer()
         with sr.Microphone() as source:
@@ -140,3 +155,5 @@ if __name__ == "__main__":
             pass
         except sr.RequestError as e:
             playsound.playsound('music/error2.mp3')
+        except:
+            playsound.playsound('music/error.mp3')
