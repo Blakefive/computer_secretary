@@ -165,11 +165,49 @@ def talk_ko(ok):
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
 
+def day_split(text):
+    day = text.split()
+    return day[0][:-1] + "-" + day[1][:-1] + day[2][:-1]
+        
+def mbirthday(ok):
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        if ok == 0:
+            tts = gTTS(text='생일 날짜만 말해주세요.', lang='ko')
+            write.make('r' + '생일 날짜만 말해주세요.')
+        filename = 'data1.mp3'
+        tts.save(filename)
+        playsound.playsound(filename)
+        os.remove('data1.mp3')
+        print("Please say your birthday")
+        audio = r.listen(source)
+    try:
+        data = r.recognize_google(audio, language='ko')
+        if data == "" or data == None:
+            data = do2()
+        write.make('m' + data)
+        return day_split(data)
+    except sr.UnknownValueError:
+        data = do2()
+        write.make('m' + data)
+        return day_split(data)
+    except sr.RequestError as e:
+        playsound.playsound('music/error2.mp3')
+
 if __name__ == "__main__":
+    f = open('data/mbirthday.txt','r')
+    line = f.readline()
+    f.close()
     birthday_year = '2020'
-    mbirthday_year = '2005'
     birthday = '930'
-    mbirthday = input('당신의 생일을 알려주세요(예 525, 105, 91): ')
+    if line != '':
+        mbirthday_year,mbirthday = int(line.split('-')[0]),int(line.split('-')[1])
+    elif line == '':
+        line = mbirthday(0)
+        mbirthday_year,mbirthday = int(line.split('-')[0]),int(line.split('-')[1])
+        f = open('data/mbirthday.txt','w')
+        line = f.write(line)
+        f.close()
     gg = 1
     hh = 0
     driver = -1
@@ -178,7 +216,7 @@ if __name__ == "__main__":
     if birthday == str(tm.tm_mon)+str(tm.tm_mday):
         check.speak('제가 벌써 ' + str((int(str(tm.tm_year)) - int(birthday_year))+1) +'살 입니다. 만들어 주셔서 감사합니다.',0)
     if mbirthday == str(tm.tm_mon)+str(tm.tm_mday):
-        check.speak('새일 축하합니다 ' + str((int(str(tm.tm_year)) - int(mbirthday_year))+1) +'살이시네요.',0)
+        check.speak('생일 축하합니다 ' + str((int(str(tm.tm_year)) - int(mbirthday_year))+1) +'살이시네요.',0)
     while True:
         r = sr.Recognizer()
         with sr.Microphone() as source:

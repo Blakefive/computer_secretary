@@ -20,8 +20,7 @@ option_wd.add_argument("disable-gpu")
 def loop_skip(driver):
     while True:
         try:
-            qwert = driver.find_element_by_xpath('//*[@id="skip-button:6"]/span/button')
-            qwert.click()
+            driver.find_element_by_xpath('//*[@id="skip-button:6"]/span/button').click()
         except:
             pass
 

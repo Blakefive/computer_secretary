@@ -25,25 +25,21 @@ import ctypes
 
 video_check = 1
 subtitle_check = 0
-subzzzzzzzzzzztitle_talk_check = 0
-check_check = 0
+subtitle_talk_check = 0
 
 def stoporstart(driver):
     global video_check
-    while True:
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        try:
-            test = soup.find('button',{'class' , 'ytp-play-button'})
-            if test != check_check:
-                testlist = str(str(test).split('=')[1]).split('"')[1]
-                if testlist == '재생(k)':
-                    video_check =  0
-                elif testlist == '일시중지(k)':
-                    video_check =  1
-        except:
-            pass
-        check_check = test
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+    try:
+        test = soup.find('button',{'class' , 'ytp-play-button'})
+        testlist = str(str(test).split('=')[1]).split('"')[1]
+        if testlist == '재생(k)':
+            video_check =  0
+        elif testlist == '일시중지(k)':
+            video_check =  1
+    except:
+        pass
 
 def name(text):
     hh = 0
@@ -159,6 +155,7 @@ def check(N,hh,driver):
         speak('계산기를 끕니다.',0)
         playsound.playsound('music/click.mp3')
         os.system('taskkill.exe /f /im calculator.exe')
+        t2.stop()
         return 1,hh,driver,0
     elif '메모장' in N and('실핼' in N or '켜' in N or '틀어' in N or '열어' in N):
         playsound.playsound('music/open program.wav')
@@ -170,6 +167,7 @@ def check(N,hh,driver):
         speak('메모장을 끕니다.',0)
         playsound.playsound('music/click.mp3')
         os.system('taskkill.exe /f /im notepad.exe')
+        tl.stop()
         return 1,hh,driver,0
     elif '날짜' in N:
         tm = time.localtime() 
@@ -240,6 +238,7 @@ def check(N,hh,driver):
         driver.back()
         return 1,hh,driver,0
     elif ('영상' in N or '노래' in N or '음악' in N) and ('켜' in N or '틀어' in N or '재생' in N):
+        stoporstart(driver)
         if video_check == 0:
             speak('영상을 재생합니다',0)
             element = driver.find_element_by_id('movie_player')
@@ -248,6 +247,7 @@ def check(N,hh,driver):
             speak('이미 영상이 재생되고 있습니다',0)
         return 1,hh,driver,0
     elif ('영상' in N or '노래' in N or '음악' in N) and ('꺼' in N or '멈춰' in N or '일시정지' in N or '일시 정지' in N or '일시중지' in N or '일시 중지' in N):
+        stoporstart(driver)
         if video_check == 1:
             speak('영상을 일시정지합니다',0)
             element = driver.find_element_by_id('movie_player')
@@ -260,24 +260,18 @@ def check(N,hh,driver):
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,1)
-        y1 = threading.Thread(target=stoporstart, args=(driver, ))
-        y1.start()
         return 1,1,driver,0
     elif '제목' in N and ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,0)
-        y2 = threading.Thread(target=stoporstart, args=(driver, ))
-        y2.start()
         return 1,1,driver,0
     elif ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,2)
-        y3 = threading.Thread(target=stoporstart, args=(driver, ))
-        y3.start()
         return 1,1,driver,0
     elif ('찾아' in N or '틀어' in N or '켜' in N or '검색' in N) and ('새창' in N or '새 창' in N or '세 창' in N or '세창' in N):
         playsound.playsound('music/insert.wav')
@@ -289,13 +283,15 @@ def check(N,hh,driver):
         return 1,hh,driver,0
     elif ('음악' in N or '노래' in N or '소리' in N) and  ('줄여' in N  or '내려' in N):
         speak('소리를 줄입니다',0)
-        HEX = 0xAD
+        user = ctypes.windll.user32
+        HEX = 0xAE
         user.keybd_event(HEX,0,1,0)
         return 1,hh,driver,0
     elif ('음악' in N or '노래' in N or '소리' in N) and  ('올려' in N or '키워' in N) :
         speak('소리를 올립니다',0)
-        HEX = 0xAD
-        user.keybd_event(HEX,0,2,0) 
+        user = ctypes.windll.user32
+        HEX = 0xAF
+        user.keybd_event(HEX,0,1,0) 
         return 1,hh,driver,0
     elif ('화면' in N or '모니터' in N )and '밝기' in N and ('올려' in N or '키워' in N) :
         speak('화면 밝기를 올립니다',7)
