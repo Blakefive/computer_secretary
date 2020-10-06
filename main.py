@@ -11,6 +11,7 @@ from googletrans import Translator
 import check
 import youtube
 import write
+import threading
 
 def name2(data):
     ww = ""
@@ -38,8 +39,6 @@ def do1(hh,driver):
         playsound.playsound('music/error1.mp3')
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
-    except:
-        playsound.playsound('music/error.mp3')
 
 def do2():
     while True:
@@ -61,8 +60,6 @@ def do2():
             playsound.playsound('music/error1.mp3')
         except sr.RequestError as e:
             playsound.playsound('music/error2.mp3')
-        except:
-            playsound.playsound('music/error.mp3')
         
 def do(ok):
     r = sr.Recognizer()
@@ -86,8 +83,6 @@ def do(ok):
         return data
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
-    except:
-        playsound.playsound('music/error.mp3')
 
 def cpu_name(ok):
     r = sr.Recognizer()
@@ -113,14 +108,68 @@ def cpu_name(ok):
         return data
     except sr.RequestError as e:
         playsound.playsound('music/error2.mp3')
-    except:
-        playsound.playsound('music/error.mp3')
+
+def talk_en(ok):
+    translator = Translator()
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        if ok == 0:
+            tts = gTTS(text='번역할 내용을 영어로 알려주세요', lang='ko')
+            write.make('r' + '번역할 내용을 영어로알려주세요')
+        filename = 'data1.mp3'
+        tts.save(filename)
+        playsound.playsound(filename)
+        os.remove('data1.mp3')
+        print("Please say what you want to translate into Korean")
+        audio = r.listen(source)
+    try:
+        data = r.recognize_google(audio, language='en')
+        if data == "" or data == None:
+            data = do2()
+        write.make('m' + data)
+        data = translator.translate(data, dest="ko").text
+        return data
+    except sr.UnknownValueError:
+        data = do2()
+        data = translator.translate(data, dest="ko").text
+        write.make('m' + data)
+        return data
+    except sr.RequestError as e:
+        playsound.playsound('music/error2.mp3')
+
+def talk_ko(ok):
+    translator = Translator()
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        if ok == 0:
+            tts = gTTS(text='번역할 내용을 한국어로 알려주세요', lang='ko')
+            write.make('r' + '번역할 내용을 한국어로 알려주세요')
+        filename = 'data1.mp3'
+        tts.save(filename)
+        playsound.playsound(filename)
+        os.remove('data1.mp3')
+        print("Please say what you want to translate into English")
+        audio = r.listen(source)
+    try:
+        data = r.recognize_google(audio, language='ko')
+        if data == "" or data == None:
+            data = do2()
+        write.make('m' + data)
+        data = translator.translate(data, dest="en").text
+        return data
+    except sr.UnknownValueError:
+        data = do2()
+        data = translator.translate(data, dest="en").text
+        write.make('m' + data)
+        return data
+    except sr.RequestError as e:
+        playsound.playsound('music/error2.mp3')
 
 if __name__ == "__main__":
     birthday_year = '2020'
     mbirthday_year = '2005'
     birthday = '930'
-    mbirthday = input('당신의 생일을 알려주세요(예 525, 105, 91')
+    mbirthday = input('당신의 생일을 알려주세요(예 525, 105, 91): ')
     gg = 1
     hh = 0
     driver = -1
@@ -151,9 +200,9 @@ if __name__ == "__main__":
             write.make('m' + data)
             if gg == 0:
                 break
+            t = threading.Thread(target=youtube.loop_skip, args=(driver, ))
+            t.start()
         except sr.UnknownValueError:
             pass
         except sr.RequestError as e:
             playsound.playsound('music/error2.mp3')
-        except:
-            playsound.playsound('music/error.mp3')
