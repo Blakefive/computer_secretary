@@ -15,13 +15,12 @@
 
 >How to use
 1. Run .\computer_secretary\relationship_program\DimScreen.exe
-2. Run .\computer_secretary\relationship_program\Sound Volume Hotkeys\SoundVolumeHotkeys.exe
-3. Open DimScreen`s settings
-4. Enter 'Ctrl + Shift + Alt + P' in Increase dimming hotkey and 'Ctrl + Shift + Alt + O' in Decease dimming hotkey
-5. Open python IDLE
-6. Open .\computer_secretary\main.py
-7. Click F5 or Run Module
-8. Enjoy this programming
+2. Open DimScreen`s settings
+3. Enter 'Ctrl + Shift + Alt + P' in Increase dimming hotkey and 'Ctrl + Shift + Alt + O' in Decease dimming hotkey
+4. Open python IDLE
+5. Open .\computer_secretary\main.py
+6. Click F5 or Run Module
+7. Enjoy this programming
 
 >Version when creating
 1. Pthon 3.7.8

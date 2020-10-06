@@ -87,7 +87,5 @@ def getTitles(findName,driver,pp):
         driver.implicitly_wait(3)
         check.speak('유튜브에서 ' + findName + ' 의 첫 번째의 영상을 실행시킵니다',3)
         driver.find_elements_by_xpath('//*[@id="video-title"]/yt-formatted-string')[0].click()
-    t = threading.Thread(target=loop_skip, args=(driver, ))
-    t.start()
         
 
