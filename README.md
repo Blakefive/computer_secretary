@@ -24,4 +24,3 @@
 
 >Version when creating
 1. Pthon 3.7.8
-2. chromedriver.exe 87.0

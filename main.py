@@ -224,6 +224,7 @@ if __name__ == "__main__":
             audio = r.listen(source)
         try:
             data = r.recognize_google(audio, language='ko')
+            print(data)
             if '자비스' in data and name2(data) != '':
                 print(name2(data))
                 playsound.playsound('music/startmusic.wav')
@@ -244,3 +245,5 @@ if __name__ == "__main__":
             pass
         except sr.RequestError as e:
             playsound.playsound('music/error2.mp3')
+        except OSError:
+            pass

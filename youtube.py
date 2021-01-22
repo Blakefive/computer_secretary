@@ -9,7 +9,7 @@ import time
 from selenium import webdriver
 from googletrans import Translator
 import check
-import threading
+
 
 title_slst = [] # stringList
 option_wd = webdriver.ChromeOptions() # option in webdriver
@@ -59,7 +59,6 @@ def tell():
         pass
     except Traceback:
         pass
-
     
 def sort(text):
     number = {1:' 첫 번째. ',2:' 두 번째. ',3:' 세 번째. ',4:' 네 번째. ',5:' 다섯 번째. '}

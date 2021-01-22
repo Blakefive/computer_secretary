@@ -58,3 +58,20 @@
 [1005/191219.071:ERROR:exception_snapshot_win.cc(99)] thread ID 2332 not found in process
 [1005/191219.118:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
 [1005/191219.118:ERROR:exception_snapshot_win.cc(99)] thread ID 6344 not found in process
+[0122/212843.888:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0122/222122.609:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0122/230229.817:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\fivef\AppData\Local\Temp\scoped_dir12224_1602127610\Crashpad\attachments\28441ef1-8411-4f8e-a363-585945642340: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0123/001443.965:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0123/001443.966:ERROR:exception_snapshot_win.cc(99)] thread ID 23024 not found in process
+[0123/001443.994:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0123/001443.994:ERROR:exception_snapshot_win.cc(99)] thread ID 23064 not found in process
+[0123/002015.717:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0123/002015.717:ERROR:exception_snapshot_win.cc(99)] thread ID 22480 not found in process
+[0123/002015.749:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0123/002015.749:ERROR:exception_snapshot_win.cc(99)] thread ID 22824 not found in process
+[0123/003034.201:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0123/004123.472:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0123/005905.414:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0123/005905.415:ERROR:exception_snapshot_win.cc(99)] thread ID 10868 not found in process
+[0123/005905.453:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0123/005905.453:ERROR:exception_snapshot_win.cc(99)] thread ID 19856 not found in process

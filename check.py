@@ -29,9 +29,9 @@ subtitle_talk_check = 0
 
 def stoporstart(driver):
     global video_check
-    html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
     try:
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
         test = soup.find('button',{'class' , 'ytp-play-button'})
         testlist = str(str(test).split('=')[1]).split('"')[1]
         if testlist == '재생(k)':
@@ -237,30 +237,6 @@ def check(N,hh,driver):
         speak('이전 영상을 재생합니다',0)
         driver.back()
         return 1,hh,driver,0
-    elif ('영상' in N or '노래' in N or '음악' in N) and ('켜' in N or '틀어' in N or '재생' in N):
-        stoporstart(driver)
-        if video_check == 0:
-            speak('영상을 재생합니다',0)
-            element = driver.find_element_by_id('movie_player')
-            element.send_keys("k")
-        elif video_check == 1:
-            speak('이미 영상이 재생되고 있습니다',0)
-        return 1,hh,driver,0
-    elif ('영상' in N or '노래' in N or '음악' in N) and ('꺼' in N or '멈춰' in N or '일시정지' in N or '일시 정지' in N or '일시중지' in N or '일시 중지' in N):
-        stoporstart(driver)
-        if video_check == 1:
-            speak('영상을 일시정지합니다',0)
-            element = driver.find_element_by_id('movie_player')
-            element.send_keys("k")
-        elif video_check == 0:
-            speak('이미 영상이 일시정지되어있습니다',0)
-        return 1,hh,driver,0
-    elif ('찾아' in N or '검색' in N) and '유튜브' in N:
-        if hh == 0:
-            driver = webdriver.Chrome('chromedriver.exe')
-        playsound.playsound('music/insert.wav')
-        youtube.getTitles(name1(N),driver,1)
-        return 1,1,driver,0
     elif '제목' in N and ('재생' in N or '틀어' in N or '켜' in N) and '유튜브' in N:
         if hh == 0:
             driver = webdriver.Chrome('chromedriver.exe')
@@ -272,6 +248,31 @@ def check(N,hh,driver):
             driver = webdriver.Chrome('chromedriver.exe')
         playsound.playsound('music/insert.wav')
         youtube.getTitles(name1(N),driver,2)
+        return 1,1,driver,0
+    elif ('영상' in N or '노래' in N or '음악' in N) and ('켜' in N or '틀어' in N or '재생' in N):
+        stoporstart(driver)
+        print("check1",video_check)
+        if video_check == 0:
+            speak('영상을 재생합니다',0)
+            element = driver.find_element_by_xpath('''//*[@id="movie_player"]''')
+            driver.execute_script("arguments[0].click();", element)
+        elif video_check == 1:
+            speak('이미 영상이 재생되고 있습니다',0)
+        return 1,hh,driver,0
+    elif ('영상' in N or '노래' in N or '음악' in N) and ('꺼' in N or '멈춰' in N or '일시정지' in N or '일시 정지' in N or '일시중지' in N or '일시 중지' in N):
+        stoporstart(driver)
+        if video_check == 1:
+            speak('영상을 일시정지합니다',0)
+            element = driver.find_element_by_xpath('''//*[@id="movie_player"]''')
+            driver.execute_script("arguments[0].click();", element)
+        elif video_check == 0:
+            speak('이미 영상이 일시정지되어있습니다',0)
+        return 1,hh,driver,0
+    elif ('찾아' in N or '검색' in N) and '유튜브' in N:
+        if hh == 0:
+            driver = webdriver.Chrome('chromedriver.exe')
+        playsound.playsound('music/insert.wav')
+        youtube.getTitles(name1(N),driver,1)
         return 1,1,driver,0
     elif ('찾아' in N or '틀어' in N or '켜' in N or '검색' in N) and ('새창' in N or '새 창' in N or '세 창' in N or '세창' in N):
         playsound.playsound('music/insert.wav')
@@ -315,6 +316,7 @@ def check(N,hh,driver):
             element = driver.find_element_by_id('movie_player')
             element.send_keys("c")
             subtitle_check = 0
+        print("check",hh)
         if hh == 0:
             try:
                 driver.quit()
