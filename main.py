@@ -12,6 +12,7 @@ import check
 import youtube
 import write
 import threading
+import sys
 
 def name2(data):
     ww = ""
@@ -22,12 +23,12 @@ def name2(data):
 def do1(hh,driver):
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        tts = gTTS(text='혹시 다시 말씀하실거면 "예" 라고 말씀해주세요', lang='ko')
+        tts = gTTS(text='혹시 다시 말씀하실거면 ".응." 라고 말씀해주세요', lang='ko')
         filename = 'data1.mp3'
         tts.save(filename)
         playsound.playsound(filename)
         os.remove('data1.mp3')
-        print("If you want to say again, you say '예'")
+        print("If you want to say again, you say '응'")
         audio = r.listen(source)
     try:
         data = r.recognize_google(audio, language='ko')
@@ -35,6 +36,8 @@ def do1(hh,driver):
         if ok == 1:
             data = do(0)
         gg,hh,driver,kk = check.check(data,hh,driver)
+        if '멈춰' in data:
+            sys.exit("")
     except sr.UnknownValueError:
         playsound.playsound('music/error1.mp3')
     except sr.RequestError as e:
@@ -234,6 +237,7 @@ if __name__ == "__main__":
                 playsound.playsound('music/startmusic.wav')
                 data1 = do(0)
                 gg,hh,driver,kk = check.check(data1,hh,driver)
+                print(data1)
                 playsound.playsound('music/endmusic.wav')
                 write.make('m' + data1)
             write.make('m' + data)
@@ -241,6 +245,15 @@ if __name__ == "__main__":
                 break
             t = threading.Thread(target=youtube.loop_skip, args=(driver, ))
             t.start()
+            try:
+                if '멈춰' in name2(data):
+                    sys.exit("")
+            except NameError:
+                try:
+                    if '멈춰' in data1:
+                        sys.exit("")
+                except NameError:
+                    pass
         except sr.UnknownValueError:
             pass
         except sr.RequestError as e:

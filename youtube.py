@@ -20,7 +20,9 @@ option_wd.add_argument("disable-gpu")
 def loop_skip(driver):
     while True:
         try:
-            driver.find_element_by_xpath('//*[@id="skip-button:6"]/span/button').click()
+            element = driver.find_element_by_xpath('//*[@id="skip-button:6"]/span/button')
+            driver.execute_script("arguments[0].click();", element)
+            print('youtube skip')
         except:
             pass
 

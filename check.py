@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 import requests
 from selenium.webdriver.common.keys import Keys
 import ctypes
+import sys
 
 video_check = 1
 subtitle_check = 0
@@ -120,7 +121,7 @@ def speak(text,check):
         os.remove('music/data.mp3')
     print(text)
 def ok(data):
-    if '예' in data or '네' in data:
+    if '예' in data or '네' in data or '응' in data:
         return 1
     return 0
 def check(N,hh,driver):
@@ -336,6 +337,7 @@ def check(N,hh,driver):
         playsound.playsound('music/remove.wav')
         try:
             driver.quit()
+            sys.exit("")
         except:
             pass
         return 0,hh,driver,0
